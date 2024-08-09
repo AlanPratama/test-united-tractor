@@ -80,7 +80,7 @@ class ProductController extends Controller
             "status" => "success",
             "message" => "Product created successfully",
             "data" => Product::with("category")->find($product->id)
-        ], 200);
+        ], 201);
     }
 
     /**
@@ -116,6 +116,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $product = Product::find($id);
+
+        if(!$product) {
+            return response()->json([
+                "status" => "failed",
+                "message" => "Product not found"
+            ], 404);
+        }
+
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'price' => 'required|integer|min:0',
@@ -131,15 +141,6 @@ class ProductController extends Controller
             ], 422);
         }
 
-
-        $product = Product::find($id);
-
-        if(!$product) {
-            return response()->json([
-                "status" => "failed",
-                "message" => "Product not found"
-            ], 404);
-        }
 
         $product->name = $request->name;
         $product->price = $request->price;

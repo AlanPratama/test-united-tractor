@@ -51,7 +51,10 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($datas as $data) {
-            User::create($data);
+            User::create([
+                "email" => $data["email"],
+                "password" => bcrypt($data["password"])
+            ]);
         }
 
     }

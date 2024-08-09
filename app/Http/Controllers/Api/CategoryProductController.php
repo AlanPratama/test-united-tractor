@@ -16,12 +16,12 @@ class CategoryProductController extends Controller
      */
     public function index()
     {
-        $category = CategoryProduct::all();
+        $categoryProducts = CategoryProduct::all();
 
         return response()->json([
             "status" => "success",
             "message" => "Category Product created successfully",
-            "data" => $category
+            "data" => $categoryProducts
         ], 200);
     }
 
@@ -45,18 +45,14 @@ class CategoryProductController extends Controller
             ], 422);
         }
 
-        $category = new CategoryProduct();
-        $category->name = $request->name;
-        $category->save();
-
-        // $category = CategoryProduct::create([
-        //     "name" => $request->name
-        // ]);
+        $categoryProduct = new CategoryProduct();
+        $categoryProduct->name = $request->name;
+        $categoryProduct->save();
 
         return response()->json([
             "status" => "success",
             "message" => "Category Product created successfully",
-            "data" => $category
+            "data" => $categoryProduct
         ], 201);
     }
 
@@ -68,9 +64,9 @@ class CategoryProductController extends Controller
      */
     public function show($id)
     {
-        $category = CategoryProduct::find($id);
+        $categoryProduct = CategoryProduct::find($id);
 
-        if (!$category) {
+        if (!$categoryProduct) {
             return response()->json([
                 "status" => "failed",
                 "message" => "Category Product not found"
@@ -80,7 +76,7 @@ class CategoryProductController extends Controller
         return response()->json([
             "status" => "success",
             "message" => "Category Product found",
-            "data" => $category
+            "data" => $categoryProduct
         ], 200);
     }
 
@@ -93,8 +89,8 @@ class CategoryProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $category = CategoryProduct::find($id);
-        if (!$category) {
+        $categoryProduct = CategoryProduct::find($id);
+        if (!$categoryProduct) {
             return response()->json([
                 "status" => "failed",
                 "message" => "Category Product not found"
@@ -102,7 +98,7 @@ class CategoryProductController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:category_products,name,' . $category->id . ",id"
+            'name' => 'required|unique:category_products,name,' . $categoryProduct->id . ",id"
         ]);
 
         if ($validator->fails()) {
@@ -113,13 +109,13 @@ class CategoryProductController extends Controller
             ], 422);
         }
 
-        $category->name = $request->name;
-        $category->save();
+        $categoryProduct->name = $request->name;
+        $categoryProduct->save();
 
         return response()->json([
             "status" => "success",
             "message" => "Category Product updated successfully",
-            "data" => $category
+            "data" => $categoryProduct
         ], 200);
     }
 
@@ -131,21 +127,21 @@ class CategoryProductController extends Controller
      */
     public function destroy($id)
     {
-        $category = CategoryProduct::find($id);
+        $categoryProduct = CategoryProduct::find($id);
 
-        if (!$category) {
+        if (!$categoryProduct) {
             return response()->json([
                 "status" => "failed",
                 "message" => "Category Product not found"
             ], 404);
         }
 
-        foreach ($category->products as $products) {
-            $products->product_category_id = null;
-            $products->save();
-        }
+        // foreach ($categoryProduct->products as $products) {
+        //     $products->product_category_id = null;
+        //     $products->save();
+        // }
 
-        $category->delete();
+        $categoryProduct->delete();
 
         return response()->json([
             "status" => "success",

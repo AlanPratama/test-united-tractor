@@ -15,22 +15,16 @@ class AuthenticationController extends Controller
         $this->user = $user;
     }
 
-    public function d() { return response()->json("asasaasa"); }
-
     public function register(Request $request)
     {
-        // $this->validate($request, [
-        //     "email" => "required|unique:users,email",
-        //     "password" => "required|min:8",
-        // ]);
-
         $validator = Validator::make($request->all(), [
-            "email" => "required|email:rfc,dns|unique:users,email",
+            "email" => "required|email:rfc|unique:users,email",
             "password" => "required|min:8",
         ]);
 
         if($validator->fails()) {
             return response()->json([
+                "status" => "failed",
                 "message" => "Registration failed",
                 "errors" => $validator->errors()
             ], 422);
@@ -44,22 +38,24 @@ class AuthenticationController extends Controller
         $token = auth()->login($user);
 
         return response()->json([
+            "status" => "success",
             "message" => "User created successfully",
             "data" => [
                 "user" => $user,
                 "token" => $token
             ]
-        ], 201);
+        ], 200);
     }
 
     public function login(Request $request) {
         $validator = Validator::make($request->all(), [
-            "email" => "required|email:rfc,dns",
+            "email" => "required|email:rfc",
             "password" => "required|min:8",
         ]);
 
         if($validator->fails()) {
             return response()->json([
+                "status" => "failed",
                 "message" => "Login failed",
                 "errors" => $validator->errors()
             ], 422);
@@ -72,17 +68,19 @@ class AuthenticationController extends Controller
 
         if(!$token) {
             return response()->json([
+                "status" => "failed",
                 "message" => "Invalid credentials"
             ], 401);
         }
 
         return response()->json([
+            "status" => "success",
             "message" => "User created successfully",
             "data" => [
                 "user" => auth()->user(),
                 "token" => $token
             ]
-        ]);
+        ], 200);
     }
 
 
@@ -94,16 +92,17 @@ class AuthenticationController extends Controller
 
         if($invalidate) {
             return response()->json([
+                "status" => "success",
                 'message' => 'Successfully logged out',
                 'data' => []
-            ]);
+            ], 200);
         }
-
     }
 
 
     public function unauthorized() {
         return response()->json([
+            "status" => "failed",
             "message" => "Unauthorized"
         ], 401);
     }

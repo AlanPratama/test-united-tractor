@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger("product_category_id")->nullable();
-            $table->foreign("product_category_id")->references("id")->on("category_products");
+            // $table->foreign("product_category_id")->references("id")->on("category_products");
+            $table->foreign("product_category_id")->references("id")->on("category_products")->onDelete('set null'); // <= bakalan null kalau category nya dihapus
 
             $table->string('name');
             $table->integer('price')->default(0);
