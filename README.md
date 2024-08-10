@@ -252,7 +252,7 @@
 
 ## 3. Product
 ***
-Symbolic Link Command:
+Symbolic link command, for stored image products:
 ````cli
 php artisan storage:link
 ````
@@ -265,6 +265,7 @@ php artisan storage:link
 ![alt text](image-14.png)
 
 Product image will be stored in public/storage/products
+
 ![alt text](image-21.png)
 
 | Request | Type     | Description                |
@@ -303,7 +304,9 @@ Product image will be stored in public/storage/products
 [PUT] /products/{id}?_method=PUT
 ````
 ![alt text](image-15.png)
+
 If product image has changed, the old image will be remove from folder and new image will be stored
+
 ![alt text](image-18.png)
 
 
@@ -485,6 +488,7 @@ If product image has changed, the old image will be remove from folder and new i
 ![alt text](image-19.png)
 
 After product success to delete, the image of product will be removed from folder
+
 ![alt text](image-20.png)
 
 ### Response
