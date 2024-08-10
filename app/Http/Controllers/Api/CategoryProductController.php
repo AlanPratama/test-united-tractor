@@ -3,12 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\CategoryProduct;
+use App\Service\CategoryProductService;
+// use App\Models\CategoryProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryProductController extends Controller
 {
+
+    protected $categoryProductService;
+
+    public function __construct(CategoryProductService $categoryProductService)
+    {
+        $this->categoryProductService = $categoryProductService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,11 +25,11 @@ class CategoryProductController extends Controller
      */
     public function index()
     {
-        $categoryProducts = CategoryProduct::all();
+        $categoryProducts = $this->categoryProductService->getAllCategoryProducts();
 
         return response()->json([
             "status" => "success",
-            "message" => "Category Product created successfully",
+            "message" => "Category Product found",
             "data" => $categoryProducts
         ], 200);
     }
@@ -45,9 +54,7 @@ class CategoryProductController extends Controller
             ], 422);
         }
 
-        $categoryProduct = new CategoryProduct();
-        $categoryProduct->name = $request->name;
-        $categoryProduct->save();
+        $categoryProduct = $this->categoryProductService->createCategoryProduct($request->all());
 
         return response()->json([
             "status" => "success",
@@ -64,12 +71,13 @@ class CategoryProductController extends Controller
      */
     public function show($id)
     {
-        $categoryProduct = CategoryProduct::find($id);
+        $categoryProduct = $this->categoryProductService->getOneCategoryProduct($id);
 
         if (!$categoryProduct) {
             return response()->json([
                 "status" => "failed",
-                "message" => "Category Product not found"
+                "message" => "Category Product not found",
+                "data" => []
             ], 404);
         }
 
@@ -89,28 +97,26 @@ class CategoryProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $categoryProduct = CategoryProduct::find($id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:category_products,name,' . $id . ",id"
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => "failed",
+                "message" => "update Category Product failed!",
+                "errors" => $validator->errors()
+            ], 422);
+        }
+
+        $categoryProduct = $this->categoryProductService->updateCategoryProduct($id, $request->all());
+
         if (!$categoryProduct) {
             return response()->json([
                 "status" => "failed",
                 "message" => "Category Product not found"
             ], 404);
         }
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:category_products,name,' . $categoryProduct->id . ",id"
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                "status" => "failed",
-                "message" => "create Category Product failed!",
-                "errors" => $validator->errors()
-            ], 422);
-        }
-
-        $categoryProduct->name = $request->name;
-        $categoryProduct->save();
 
         return response()->json([
             "status" => "success",
@@ -127,25 +133,17 @@ class CategoryProductController extends Controller
      */
     public function destroy($id)
     {
-        $categoryProduct = CategoryProduct::find($id);
 
-        if (!$categoryProduct) {
+        if ($this->categoryProductService->deleteCategoryProduct($id)) {
             return response()->json([
-                "status" => "failed",
-                "message" => "Category Product not found"
-            ], 404);
+                "status" => "success",
+                "message" => "Category Product deleted successfully!"
+            ], 200);
         }
 
-        // foreach ($categoryProduct->products as $products) {
-        //     $products->product_category_id = null;
-        //     $products->save();
-        // }
-
-        $categoryProduct->delete();
-
         return response()->json([
-            "status" => "success",
-            "message" => "Category Product deleted successfully!"
-        ], 200);
+            "status" => "failed",
+            "message" => "Category Product not found"
+        ], 404);
     }
 }

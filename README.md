@@ -1,64 +1,489 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Database Design System
+![DB Design System](image-2.png)
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## Authentication
+***
+### Register
+![alt text](image-1.png)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+````json
+[POST] /register
+````
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Request | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `email` | `string` | **Required**. Email must be valid and unique. |
+| `password` | `string` | **Required**. Password must be at least 6 characters. |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Response
+````json
+{
+    "status": "success",
+    "message": "Register user successfully",
+    "data": {
+        "user": {
+            "email": "tokoweb@gmail.com",
+            "updated_at": "2024-08-10T00:38:25.000000Z",
+            "created_at": "2024-08-10T00:38:25.000000Z",
+            "id": 10
+        },
+        "access_token": {
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvcmVnaXN0ZXIiLCJpYXQiOjE3MjMyNTAzMDUsImV4cCI6MTcyMzI1MzkwNSwibmJmIjoxNzIzMjUwMzA1LCJqdGkiOiJidHpNMDF5S3lURUFUa3BlIiwic3ViIjoiMTAiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.-snwxLimUnKQdhAaJ70N3AmqaAPr_MPpR73aHwrjgGU",
+            "type": "Bearer",
+            "expires_in": 3600
+        }
+    }
+}
+````
 
-## Learning Laravel
+### Login
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+![alt text](image.png)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+````json
+[POST] /login
+````
 
-## Laravel Sponsors
+| Request | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `email` | `string` | **Required**. Email must be valid. |
+| `password` | `string` | **Required**. Password must be at least 6 characters. |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Response
+````json
+{
+    "status": "success",
+    "message": "Login successfully",
+    "data": {
+        "user": {
+            "id": 10,
+            "email": "tokoweb@gmail.com",
+            "created_at": "2024-08-10T00:38:25.000000Z",
+            "updated_at": "2024-08-10T00:38:25.000000Z"
+        },
+        "access_token": {
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvbG9naW4iLCJpYXQiOjE3MjMyNTA0NTgsImV4cCI6MTcyMzI1NDA1OCwibmJmIjoxNzIzMjUwNDU4LCJqdGkiOiJRUGNmOXJ3bVNTWGhWUmpHIiwic3ViIjoiMTAiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.1EKAzNl6XVyUPTRRTSWvA0PFTmDHEJpBIAPCS4DiY_M",
+            "type": "Bearer",
+            "expires_in": 3600
+        }
+    }
+}
+````
 
-### Premium Partners
+## NOTE: The Endpoint Bellow Requires Bearer Token
+![alt text](image-3.png)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Category Product
+***
+### Create
+#### Authenticad Token Required
+````json
+[POST] /category-products
+````
+![alt text](image-4.png)
 
-## Contributing
+| Request | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name` | `string` | **Required**. Name must be unique. |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Response
+````json
+{
+    "status": "success",
+    "message": "Category Product created successfully",
+    "data": {
+        "name": "Mainan",
+        "updated_at": "2024-08-10T00:47:28.000000Z",
+        "created_at": "2024-08-10T00:47:28.000000Z",
+        "id": 6
+    }
+}
+````
 
-## Code of Conduct
+### Update
+#### Authenticad Token Required
+````json
+[PUT] /category-products/{id}
+````
+![alt text](image-5.png)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Request | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name` | `string` | **Required**. Name must be unique. |
 
-## Security Vulnerabilities
+### Response
+````json
+{
+    "status": "success",
+    "message": "Category Product updated successfully",
+    "data": {
+        "id": 6,
+        "name": "Mainan Tembak Tembakan",
+        "created_at": "2024-08-10T00:47:28.000000Z",
+        "updated_at": "2024-08-10T00:50:28.000000Z"
+    }
+}
+````
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+### Get All
+#### Authenticad Token Required
+````json
+[GET] /category-products
+````
+![alt text](image-6.png)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Response
+````json
+{
+    "status": "success",
+    "message": "Category Product found",
+    "data": [
+        {
+            "id": 1,
+            "name": "Makanan",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z"
+        },
+        {
+            "id": 2,
+            "name": "Minuman",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z"
+        },
+        {
+            "id": 3,
+            "name": "Elektronik",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z"
+        },
+        {
+            "id": 4,
+            "name": "Kesehatan",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z"
+        },
+        {
+            "id": 5,
+            "name": "Fashion",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z"
+        },
+        {
+            "id": 6,
+            "name": "Mainan Tembak Tembakan",
+            "created_at": "2024-08-10T00:47:28.000000Z",
+            "updated_at": "2024-08-10T00:50:28.000000Z"
+        }
+    ]
+}
+````
+
+### Get One By ID
+#### Authenticad Token Required
+````json
+[GET] /category-products/{id}
+````
+![alt text](image-7.png)
+
+### Response
+````json
+{
+    "status": "success",
+    "message": "Category Product found",
+    "data": {
+        "id": 6,
+        "name": "Mainan Tembak Tembakan",
+        "created_at": "2024-08-10T00:47:28.000000Z",
+        "updated_at": "2024-08-10T00:50:28.000000Z"
+    }
+}
+````
+
+### Delete By ID
+#### Authenticad Token Required
+````json
+[DELETE] /category-products/{id}
+````
+![alt text](image-8.png)
+### Response
+````json
+{
+    "status": "success",
+    "message": "Category Product deleted successfully!"
+}
+````
+
+### If Category Product Was Not Found
+![alt text](image-11.png)
+![alt text](image-10.png)
+![alt text](image-9.png)
+
+### If Request Is Not Valid
+![alt text](image-12.png)
+![alt text](image-13.png)
+
+
+***
+
+## 3. Product
+***
+Symbolic Link Command:
+````cli
+php artisan storage:link
+````
+
+### Create
+#### Authenticad Token Required
+````json
+[POST] /products
+````
+![alt text](image-14.png)
+
+Product image will be stored in public/storage/products
+![alt text](image-21.png)
+
+| Request | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name` | `string` | **Required**. Name product. |
+| `price` | `integer` | **Required**. Price product, min 0. |
+| `image` | `string` | **Required**. Image product. |
+| `product_category_id` | `integer` | Category product. |
+
+### Response
+````json
+{
+    "status": "success",
+    "message": "Product created successfully",
+    "data": {
+        "id": 6,
+        "product_category_id": 3,
+        "name": "Laptop Gaming Kenceng",
+        "price": 10000000,
+        "image": "products/laptop-gaming-kenceng-1723252092.jpg",
+        "created_at": "2024-08-10T01:08:12.000000Z",
+        "updated_at": "2024-08-10T01:08:12.000000Z",
+        "category": {
+            "id": 3,
+            "name": "Elektronik",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z"
+        }
+    }
+}
+````
+
+### Update
+#### Authenticad Token Required
+````json
+[PUT] /products/{id}?_method=PUT
+````
+![alt text](image-15.png)
+If product image has changed, the old image will be remove from folder and new image will be stored
+![alt text](image-18.png)
+
+
+
+| Request | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name` | `string` | **Required**. Name product. |
+| `price` | `integer` | **Required**. Price product, min 0. |
+| `image` | `string` | Image product. |
+| `product_category_id` | `integer` | Category product. |
+
+### Response
+````json
+{
+    "status": "success",
+    "message": "Product updated successfully",
+    "data": {
+        "id": 6,
+        "product_category_id": "3",
+        "name": "Laptop ASUS TUF Gaming Kenceng Banget",
+        "price": "11000000",
+        "image": "products/laptop-asus-tuf-gaming-kenceng-banget-1723252269.jpg",
+        "created_at": "2024-08-10T01:08:12.000000Z",
+        "updated_at": "2024-08-10T01:11:09.000000Z",
+        "category": {
+            "id": 3,
+            "name": "Elektronik",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z"
+        }
+    }
+}
+````
+
+
+### Get All
+#### Authenticad Token Required
+````json
+[GET] /products
+````
+![alt text](image-16.png)
+
+### Response
+````json
+{
+    "status": "success",
+    "message": "Product found",
+    "data": [
+        {
+            "id": 1,
+            "product_category_id": 1,
+            "name": "Nasi Goreng",
+            "price": 10000,
+            "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z",
+            "category": {
+                "id": 1,
+                "name": "Makanan",
+                "created_at": "2024-08-10T00:33:27.000000Z",
+                "updated_at": "2024-08-10T00:33:27.000000Z"
+            }
+        },
+        {
+            "id": 2,
+            "product_category_id": 2,
+            "name": "Es Teh",
+            "price": 5000,
+            "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z",
+            "category": {
+                "id": 2,
+                "name": "Minuman",
+                "created_at": "2024-08-10T00:33:27.000000Z",
+                "updated_at": "2024-08-10T00:33:27.000000Z"
+            }
+        },
+        {
+            "id": 3,
+            "product_category_id": 3,
+            "name": "Laptop Lenovo Thinkpad T495",
+            "price": 4500000,
+            "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z",
+            "category": {
+                "id": 3,
+                "name": "Elektronik",
+                "created_at": "2024-08-10T00:33:27.000000Z",
+                "updated_at": "2024-08-10T00:33:27.000000Z"
+            }
+        },
+        {
+            "id": 4,
+            "product_category_id": 4,
+            "name": "Paramex Obat Sakit Kepala",
+            "price": 7000,
+            "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z",
+            "category": {
+                "id": 4,
+                "name": "Kesehatan",
+                "created_at": "2024-08-10T00:33:27.000000Z",
+                "updated_at": "2024-08-10T00:33:27.000000Z"
+            }
+        },
+        {
+            "id": 5,
+            "product_category_id": 5,
+            "name": "Erigo Varsity",
+            "price": 250000,
+            "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z",
+            "category": {
+                "id": 5,
+                "name": "Fashion",
+                "created_at": "2024-08-10T00:33:27.000000Z",
+                "updated_at": "2024-08-10T00:33:27.000000Z"
+            }
+        },
+        {
+            "id": 6,
+            "product_category_id": 3,
+            "name": "Laptop ASUS TUF Gaming Kenceng Banget",
+            "price": 11000000,
+            "image": "products/laptop-asus-tuf-gaming-kenceng-banget-1723252269.jpg",
+            "created_at": "2024-08-10T01:08:12.000000Z",
+            "updated_at": "2024-08-10T01:11:09.000000Z",
+            "category": {
+                "id": 3,
+                "name": "Elektronik",
+                "created_at": "2024-08-10T00:33:27.000000Z",
+                "updated_at": "2024-08-10T00:33:27.000000Z"
+            }
+        }
+    ]
+}
+````
+
+### Get One By ID
+#### Authenticad Token Required
+````json
+[GET] /products/{id}
+````
+![alt text](image-17.png)
+
+
+### Response
+````json
+{
+    "status": "success",
+    "message": "Product found",
+    "data": {
+        "id": 6,
+        "product_category_id": 3,
+        "name": "Laptop ASUS TUF Gaming Kenceng Banget",
+        "price": 11000000,
+        "image": "products/laptop-asus-tuf-gaming-kenceng-banget-1723252269.jpg",
+        "created_at": "2024-08-10T01:08:12.000000Z",
+        "updated_at": "2024-08-10T01:11:09.000000Z",
+        "category": {
+            "id": 3,
+            "name": "Elektronik",
+            "created_at": "2024-08-10T00:33:27.000000Z",
+            "updated_at": "2024-08-10T00:33:27.000000Z"
+        }
+    }
+}
+````
+
+### Delete By ID
+#### Authenticad Token Required
+````json
+[DELETE] /products/{id}
+````
+![alt text](image-19.png)
+
+After product success to delete, the image of product will be removed from folder
+![alt text](image-20.png)
+
+### Response
+````json
+{
+    "status": "success",
+    "message": "Product deleted successfully!"
+}
+````
+
+### Image Product Was Stored In public/storage/products Folder
+Symbolic link command:
+````cli
+php artisan storage:link
+````
+![alt text](image-18.png)
+
+### If Product Was Not Found
+![alt text](image-23.png)
+![alt text](image-22.png)
+![alt text](image-24.png)
+
+### If Request Is Not Valid
+![alt text](image-25.png)
+![alt text](image-26.png)

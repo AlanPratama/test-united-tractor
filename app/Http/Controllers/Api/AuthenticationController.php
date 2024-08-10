@@ -4,22 +4,26 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Service\AuthenticationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthenticationController extends Controller
 {
-    public function __construct(User $user)
+
+    protected $authenticationService;
+
+    public function __construct(AuthenticationService $authenticationService)
     {
-        $this->user = $user;
+        $this->authenticationService = $authenticationService;
     }
 
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             "email" => "required|email:rfc|unique:users,email",
-            "password" => "required|min:8",
+            "password" => "required|min:6",
         ]);
 
         if($validator->fails()) {
@@ -30,19 +34,19 @@ class AuthenticationController extends Controller
             ], 422);
         }
 
-        $user = $this->user->create([
-            "email" => $request->email,
-            "password" => bcrypt($request->password)
-        ]);
 
-        $token = auth()->login($user);
+        $response = $this->authenticationService->registerUser($request->all());
 
         return response()->json([
             "status" => "success",
-            "message" => "User created successfully",
+            "message" => "Register user successfully",
             "data" => [
-                "user" => $user,
-                "token" => $token
+                "user" => $response["user"],
+                "access_token" => [
+                    "token" => $response["token"],
+                    "type" => "Bearer",
+                    "expires_in" => auth()->factory()->getTTL() * 60
+                ]
             ]
         ], 200);
     }
@@ -50,7 +54,7 @@ class AuthenticationController extends Controller
     public function login(Request $request) {
         $validator = Validator::make($request->all(), [
             "email" => "required|email:rfc",
-            "password" => "required|min:8",
+            "password" => "required|min:6",
         ]);
 
         if($validator->fails()) {
@@ -61,10 +65,7 @@ class AuthenticationController extends Controller
             ], 422);
         }
 
-        $token = auth()->attempt([
-            "email" => $request->email,
-            "password" => $request->password
-        ]);
+        $token = $this->authenticationService->loginUser($request->all());
 
         if(!$token) {
             return response()->json([
@@ -75,10 +76,14 @@ class AuthenticationController extends Controller
 
         return response()->json([
             "status" => "success",
-            "message" => "User created successfully",
+            "message" => "Login successfully",
             "data" => [
                 "user" => auth()->user(),
-                "token" => $token
+                "access_token" => [
+                    "token" => $token,
+                    "type" => "Bearer",
+                    "expires_in" => auth()->factory()->getTTL() * 60
+                ]
             ]
         ], 200);
     }
@@ -86,9 +91,7 @@ class AuthenticationController extends Controller
 
     public function logout()
     {
-        $token = JWTAuth::getToken();
-
-        $invalidate = JWTAuth::invalidate($token);
+        $invalidate = $this->authenticationService->logoutUser();
 
         if($invalidate) {
             return response()->json([
@@ -97,6 +100,11 @@ class AuthenticationController extends Controller
                 'data' => []
             ], 200);
         }
+
+        return response()->json([
+            "status" => "failed",
+            "message" => "Unauthorized"
+        ], 401);
     }
 
 
