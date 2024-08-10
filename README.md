@@ -71,10 +71,33 @@
 }
 ````
 
+
 ## NOTE: The Endpoint Bellow Requires Bearer Token
 ![alt text](image-3.png)
+#### if no token:
+![alt text](image-27.png)
 
-## Category Product
+
+### Logout
+#### Authenticad Token Required
+````json
+[POST] /logout
+````
+![alt text](image-28.png)
+#### After logout, previous token will be not valid
+![alt text](image-29.png)
+
+### Response
+````json
+{
+    "status": "success",
+    "message": "Successfully logged out",
+    "data": []
+}
+````
+
+
+## 2. Category Product
 ***
 ### Create
 #### Authenticad Token Required
